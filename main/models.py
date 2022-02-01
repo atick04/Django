@@ -3,13 +3,6 @@
 from django.db import models
 
 
-class Category(models.Model):
-    name = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.name
-
-
 class Tag(models.Model):
     name = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
@@ -22,7 +15,7 @@ class Product(models.Model):
     title = models.CharField(max_length=50)
     description = models.TextField()
     price = models.IntegerField()
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+   
     tags = models.ManyToManyField(Tag, blank=True)
 
     def __str__(self):

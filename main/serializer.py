@@ -1,11 +1,8 @@
 from rest_framework import serializers
-from .models import Category, Tag, Product, Review
+from .models import  Tag, Product, Review
 
 
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = "__all__"
+
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -28,5 +25,20 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ['id', 'title', 'description', 'price', 'category', 'tags', 'reviews']
 
+    def create(self, validated_data):
+        return Product.object.all()
+
     def get_tags(self, product):
         return TagSerializer(product.tags.filter(is_active=True), many=True).data
+
+
+
+class ProductValidateSerializer(serializers.Serializer):
+    title = serializers.CharField(min_length=5, max_length=25)
+    description = serializers.CharField()
+    price = serializers.IntegerField()
+    tags = serializers.ListField()
+
+def validate_title(self, title):
+    if Product.objects.filter(title=title):
+        raise ValidationError("This product already exist!")
